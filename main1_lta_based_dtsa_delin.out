@@ -1,0 +1,649 @@
+Mplus VERSION 8.6
+MUTHEN & MUTHEN
+02/18/2022   4:06 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE: Latent Transition-based DTSA
+  DATA: FILE = main_data.csv;
+  VARIABLE:
+    NAMES = ID t_m e_m t_c e_c delin1-delin6 crime1-crime6 gender;
+    USEVARIABLES = delin1-delin4;
+    CATEGORICAL = delin1-delin4;
+    CLASSES = C_del1(2) C_del2(3) C_del3(3) C_del4(3);
+    !MISSING = all(-99);
+
+  ANALYSIS:
+    TYPE = MIXTURE;
+    STARTS = 0;
+    !ALGORITHM = INTEGRATION;
+    !INTEGRATION = MONTECARLO;
+
+  MODEL:
+    %OVERALL%
+      C_del2#1 ON C_del1#1@30;
+      C_del2#2 ON C_del1#1@-30;
+      C_del3#1 ON C_del2#1@30  C_del2#2@30;
+      C_del3#2 ON C_del2#1@-30 C_del2#2@-30;
+  	C_del4#1 ON C_del3#1@30  C_del3#2@30;
+      C_del4#2 ON C_del3#1@-30 C_del3#2@-30;
+
+      [C_del1#1];
+      [C_del2#1@-30 C_del2#2];
+      [C_del3#1@-30 C_del3#2];
+  	[C_del4#1@-30 C_del4#2];
+
+    Model C_del1:
+
+      %C_del1#1% !event;
+        [delin1$1@-15];
+
+      %C_del1#2% !before-event;
+        [delin1$1@15];
+
+    Model C_del2:
+
+      %C_del2#1% !censored;
+        [delin2$1@15];
+        [delin2$2@30];
+
+      %C_del2#2% !event;
+        [delin2$1@-30];
+        [delin2$2@-20];
+
+      %C_del2#3% !before-event;
+        [delin2$1@-30];
+        [delin2$2@30];
+
+    Model C_del3:
+
+      %C_del3#1% !censored;
+        [delin3$1@15];
+        [delin3$2@30];
+
+      %C_del3#2% !event;
+        [delin3$1@-30];
+        [delin3$2@-20];
+
+      %C_del3#3% !before-event;
+        [delin3$1@-30];
+        [delin3$2@30];
+
+    Model C_del4:
+
+      %C_del4#1% !before;
+        [delin4$1@15];
+        [delin4$2@30];
+
+      %C_del4#2% !event;
+        [delin4$1@-30];
+        [delin4$2@-20];
+
+      %C_del4#3% !before-event;
+        [delin4$1@-30];
+        [delin4$2@30];
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+Latent Transition-based DTSA
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        2351
+
+Number of dependent variables                                    4
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+Number of categorical latent variables                           4
+
+Observed dependent variables
+
+  Binary and ordered categorical (ordinal)
+   DELIN1      DELIN2      DELIN3      DELIN4
+
+Categorical latent variables
+   C_DEL1      C_DEL2      C_DEL3      C_DEL4
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-03
+    Relative loglikelihood change                        0.100D-05
+    Derivative                                           0.100D-03
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-03
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-03
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Optimization algorithm                                         EMA
+Parameterization                                             LOGIT
+Link                                                         LOGIT
+
+Input data file(s)
+  common_dtsa_dataset_add_gamble_sex.csv
+Input data format  FREE
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    DELIN1
+      Category 1    0.849         1996.000
+      Category 2    0.151          355.000
+    DELIN2
+      Category 1    0.151          355.000
+      Category 2    0.771         1813.000
+      Category 3    0.078          183.000
+    DELIN3
+      Category 1    0.229          538.000
+      Category 2    0.687         1614.000
+      Category 3    0.085          199.000
+    DELIN4
+      Category 1    0.313          737.000
+      Category 2    0.607         1428.000
+      Category 3    0.079          186.000
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        4
+
+Loglikelihood
+
+          H0 Value                       -3943.365
+          H0 Scaling Correction Factor      1.0000
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                    7894.730
+          Bayesian (BIC)                  7917.780
+          Sample-Size Adjusted BIC        7905.072
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit for the Binary and Ordered Categorical
+(Ordinal) Outcomes
+
+          Pearson Chi-Square
+
+          Value                           3233.000
+          Degrees of Freedom                    49
+          P-Value                           0.0000
+
+          Likelihood Ratio Chi-Square
+
+          Value                           2259.660
+          Degrees of Freedom                    49
+          P-Value                           0.0000
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR EACH LATENT CLASS VARIABLE
+BASED ON THE ESTIMATED MODEL
+
+  Latent Class
+    Variable    Class
+
+    C_DEL1         1       355.00006          0.15100
+                   2      1996.00000          0.84900
+    C_DEL2         1       177.50003          0.07550
+                   2       183.00000          0.07784
+                   3      1990.50000          0.84666
+    C_DEL3         1       180.25002          0.07667
+                   2       218.48289          0.09293
+                   3      1952.26709          0.83040
+    C_DEL4         1       199.36646          0.08480
+                   2       224.98245          0.09570
+                   3      1926.65112          0.81950
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         1.000
+
+
+LATENT CLASS INDICATOR MEANS AND PROBABILITIES FOR EACH LATENT CLASS
+
+     MEAN/PROBABILITY PROFILES FOR C_DEL1
+                   Latent class
+                     1      2
+     DELIN1
+       Category 1  0.000  1.000
+       Category 2  1.000  0.000
+
+     MEAN/PROBABILITY PROFILES FOR C_DEL2
+                       Latent class
+                     1      2      3
+     DELIN2
+       Category 1  1.000  0.000  0.000
+       Category 2  0.000  0.000  1.000
+       Category 3  0.000  1.000  0.000
+
+     MEAN/PROBABILITY PROFILES FOR C_DEL3
+                       Latent class
+                     1      2      3
+     DELIN3
+       Category 1  1.000  0.000  0.000
+       Category 2  0.000  0.000  1.000
+       Category 3  0.000  1.000  0.000
+
+     MEAN/PROBABILITY PROFILES FOR C_DEL4
+                       Latent class
+                     1      2      3
+     DELIN4
+       Category 1  1.000  0.000  0.000
+       Category 2  0.000  0.000  1.000
+       Category 3  0.000  1.000  0.000
+
+
+LATENT TRANSITION PROBABILITIES BASED ON THE ESTIMATED MODEL
+
+  C_DEL1 Classes (Rows) by C_DEL2 Classes (Columns)
+
+            1        2        3
+
+   1     0.500    0.000    0.500
+   2     0.000    0.092    0.908
+
+  C_DEL2 Classes (Rows) by C_DEL3 Classes (Columns)
+
+            1        2        3
+
+   1     0.500    0.000    0.500
+   2     0.500    0.000    0.500
+   3     0.000    0.110    0.890
+
+  C_DEL3 Classes (Rows) by C_DEL4 Classes (Columns)
+
+            1        2        3
+
+   1     0.500    0.000    0.500
+   2     0.500    0.000    0.500
+   3     0.000    0.115    0.885
+
+
+C-SPECIFIC CLASSIFICATION RESULTS
+
+Classification Quality for C_DEL1
+
+     Entropy                         1.000
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2
+
+    1   1.000    0.000
+    2   0.000    1.000
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2
+
+    1   1.000    0.000
+    2   0.000    1.000
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2
+
+    1     13.816    0.000
+    2    -13.816    0.000
+
+Classification Quality for C_DEL2
+
+     Entropy                         1.000
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3
+
+    1     13.816    0.000    0.000
+    2      0.000   13.816    0.000
+    3    -13.816  -13.816    0.000
+
+Classification Quality for C_DEL3
+
+     Entropy                         1.000
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3
+
+    1     13.816    0.000    0.000
+    2      0.000   13.816    0.000
+    3    -13.816  -13.816    0.000
+
+Classification Quality for C_DEL4
+
+     Entropy                         1.000
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3
+
+    1     13.816    0.000    0.000
+    2      0.000   13.816    0.000
+    3    -13.816  -13.816    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Parameters for Class-specific Model Parts of C_DEL1
+
+Latent Class C_DEL1#1
+
+ Thresholds
+    DELIN1$1         -15.000      0.000    999.000    999.000
+
+Latent Class C_DEL1#2
+
+ Thresholds
+    DELIN1$1          15.000      0.000    999.000    999.000
+
+Parameters for Class-specific Model Parts of C_DEL2
+
+Latent Class C_DEL2#1
+
+ Thresholds
+    DELIN2$1          15.000      0.000    999.000    999.000
+    DELIN2$2          30.000      0.000    999.000    999.000
+
+Latent Class C_DEL2#2
+
+ Thresholds
+    DELIN2$1         -30.000      0.000    999.000    999.000
+    DELIN2$2         -20.000      0.000    999.000    999.000
+
+Latent Class C_DEL2#3
+
+ Thresholds
+    DELIN2$1         -30.000      0.000    999.000    999.000
+    DELIN2$2          30.000      0.000    999.000    999.000
+
+Parameters for Class-specific Model Parts of C_DEL3
+
+Latent Class C_DEL3#1
+
+ Thresholds
+    DELIN3$1          15.000      0.000    999.000    999.000
+    DELIN3$2          30.000      0.000    999.000    999.000
+
+Latent Class C_DEL3#2
+
+ Thresholds
+    DELIN3$1         -30.000      0.000    999.000    999.000
+    DELIN3$2         -20.000      0.000    999.000    999.000
+
+Latent Class C_DEL3#3
+
+ Thresholds
+    DELIN3$1         -30.000      0.000    999.000    999.000
+    DELIN3$2          30.000      0.000    999.000    999.000
+
+Parameters for Class-specific Model Parts of C_DEL4
+
+Latent Class C_DEL4#1
+
+ Thresholds
+    DELIN4$1          15.000      0.000    999.000    999.000
+    DELIN4$2          30.000      0.000    999.000    999.000
+
+Latent Class C_DEL4#2
+
+ Thresholds
+    DELIN4$1         -30.000      0.000    999.000    999.000
+    DELIN4$2         -20.000      0.000    999.000    999.000
+
+Latent Class C_DEL4#3
+
+ Thresholds
+    DELIN4$1         -30.000      0.000    999.000    999.000
+    DELIN4$2          30.000      0.000    999.000    999.000
+
+Categorical Latent Variables
+
+ C_DEL2#1 ON
+    C_DEL1#1          30.000      0.000    999.000    999.000
+
+ C_DEL2#2 ON
+    C_DEL1#1         -30.000      0.000    999.000    999.000
+
+ C_DEL3#1 ON
+    C_DEL2#1          30.000      0.000    999.000    999.000
+    C_DEL2#2          30.000      0.000    999.000    999.000
+
+ C_DEL3#2 ON
+    C_DEL2#1         -30.000      0.000    999.000    999.000
+    C_DEL2#2         -30.000      0.000    999.000    999.000
+
+ C_DEL4#1 ON
+    C_DEL3#1          30.000      0.000    999.000    999.000
+    C_DEL3#2          30.000      0.000    999.000    999.000
+
+ C_DEL4#2 ON
+    C_DEL3#1         -30.000      0.000    999.000    999.000
+    C_DEL3#2         -30.000      0.000    999.000    999.000
+
+ Means
+    C_DEL1#1          -1.727      0.058    -29.978      0.000
+    C_DEL2#1         -30.000      0.000    999.000    999.000
+    C_DEL2#2          -2.293      0.078    -29.567      0.000
+    C_DEL3#1         -30.000      0.000    999.000    999.000
+    C_DEL3#2          -2.093      0.075    -27.860      0.000
+    C_DEL4#1         -30.000      0.000    999.000    999.000
+    C_DEL4#2          -2.038      0.078    -26.148      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.546E+00
+       (ratio of smallest to largest eigenvalue)
+
+
+RESULTS IN PROBABILITY SCALE
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Results for Class-specific Model Parts of C_DEL1
+
+Latent Class C_DEL1#1
+
+ DELIN1
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         1.000      0.000      0.000      1.000
+
+Latent Class C_DEL1#2
+
+ DELIN1
+    Category 1         1.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+
+Results for Class-specific Model Parts of C_DEL2
+
+Latent Class C_DEL2#1
+
+ DELIN2
+    Category 1         1.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Latent Class C_DEL2#2
+
+ DELIN2
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         1.000      0.000      0.000      1.000
+
+Latent Class C_DEL2#3
+
+ DELIN2
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         1.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Results for Class-specific Model Parts of C_DEL3
+
+Latent Class C_DEL3#1
+
+ DELIN3
+    Category 1         1.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Latent Class C_DEL3#2
+
+ DELIN3
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         1.000      0.000      0.000      1.000
+
+Latent Class C_DEL3#3
+
+ DELIN3
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         1.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Results for Class-specific Model Parts of C_DEL4
+
+Latent Class C_DEL4#1
+
+ DELIN4
+    Category 1         1.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Latent Class C_DEL4#2
+
+ DELIN4
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         1.000      0.000      0.000      1.000
+
+Latent Class C_DEL4#3
+
+ DELIN4
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         1.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+
+DIAGRAM INFORMATION
+
+  Mplus diagrams are currently not available for Mixture analysis.
+  No diagram output was produced.
+
+
+     Beginning Time:  16:06:58
+        Ending Time:  16:06:58
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2021 Muthen & Muthen

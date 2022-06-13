@@ -1,0 +1,649 @@
+Mplus VERSION 8.6
+MUTHEN & MUTHEN
+02/18/2022   4:06 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE: Latent Transition-based DTSA
+  DATA: FILE = main_data.csv;
+  VARIABLE:
+    NAMES = ID t_m e_m t_c e_c delin1-delin6 crime1-crime6 gender;
+    USEVARIABLES = crime1-crime4;
+    CATEGORICAL = crime1-crime4;
+    CLASSES = C_cri1(2) C_cri2(3) C_cri3(3) C_cri4(3);
+    !MISSING = all(-99);
+
+  ANALYSIS:
+    TYPE = MIXTURE;
+    STARTS = 0;
+    !ALGORITHM = INTEGRATION;
+    !INTEGRATION = MONTECARLO;
+
+  MODEL:
+    %OVERALL%
+      C_cri2#1 ON C_cri1#1@30;
+      C_cri2#2 ON C_cri1#1@-30;
+      C_cri3#1 ON C_cri2#1@30  C_cri2#2@30;
+      C_cri3#2 ON C_cri2#1@-30 C_cri2#2@-30;
+  	C_cri4#1 ON C_cri3#1@30  C_cri3#2@30;
+      C_cri4#2 ON C_cri3#1@-30 C_cri3#2@-30;
+
+      [C_cri1#1];
+      [C_cri2#1@-30 C_cri2#2];
+      [C_cri3#1@-30 C_cri3#2];
+  	[C_cri4#1@-30 C_cri4#2];
+
+    MODEL C_cri1:
+
+      %C_cri1#1% !event;
+        [crime1$1@-15];
+
+      %C_cri1#2% !before-event;
+        [crime1$1@15];
+
+    MODEL C_cri2:
+
+      %C_cri2#1% !censored;
+        [crime2$1@15];
+        [crime2$2@30];
+
+      %C_cri2#2% !event;
+        [crime2$1@-30];
+        [crime2$2@-20];
+
+      %C_cri2#3% !before-event;
+        [crime2$1@-30];
+        [crime2$2@30];
+
+    MODEL C_cri3:
+
+      %C_cri3#1% !censored;
+        [crime3$1@15];
+        [crime3$2@30];
+
+      %C_cri3#2% !event;
+        [crime3$1@-30];
+        [crime3$2@-20];
+
+      %C_cri3#3% !before-event;
+        [crime3$1@-30];
+        [crime3$2@30];
+
+    MODEL C_cri4:
+
+      %C_cri4#1% !censored;
+        [crime4$1@15];
+        [crime4$2@30];
+
+      %C_cri4#2% !event;
+        [crime4$1@-30];
+        [crime4$2@-20];
+
+      %C_cri4#3% !before-event;
+        [crime4$1@-30];
+        [crime4$2@30];
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+Latent Transition-based DTSA
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        2351
+
+Number of dependent variables                                    4
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+Number of categorical latent variables                           4
+
+Observed dependent variables
+
+  Binary and ordered categorical (ordinal)
+   CRIME1      CRIME2      CRIME3      CRIME4
+
+Categorical latent variables
+   C_CRI1      C_CRI2      C_CRI3      C_CRI4
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-03
+    Relative loglikelihood change                        0.100D-05
+    Derivative                                           0.100D-03
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-03
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-03
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Optimization algorithm                                         EMA
+Parameterization                                             LOGIT
+Link                                                         LOGIT
+
+Input data file(s)
+  common_dtsa_dataset_add_gamble_sex.csv
+Input data format  FREE
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    CRIME1
+      Category 1    0.930         2186.000
+      Category 2    0.070          165.000
+    CRIME2
+      Category 1    0.070          165.000
+      Category 2    0.896         2106.000
+      Category 3    0.034           80.000
+    CRIME3
+      Category 1    0.104          245.000
+      Category 2    0.872         2049.000
+      Category 3    0.024           57.000
+    CRIME4
+      Category 1    0.128          302.000
+      Category 2    0.854         2008.000
+      Category 3    0.017           41.000
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        4
+
+Loglikelihood
+
+          H0 Value                       -1897.003
+          H0 Scaling Correction Factor      0.9996
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                    3802.007
+          Bayesian (BIC)                  3825.057
+          Sample-Size Adjusted BIC        3812.348
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit for the Binary and Ordered Categorical
+(Ordinal) Outcomes
+
+          Pearson Chi-Square
+
+          Value                           1452.000
+          Degrees of Freedom                    49
+          P-Value                           0.0000
+
+          Likelihood Ratio Chi-Square
+
+          Value                            987.042
+          Degrees of Freedom                    49
+          P-Value                           0.0000
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR EACH LATENT CLASS VARIABLE
+BASED ON THE ESTIMATED MODEL
+
+  Latent Class
+    Variable    Class
+
+    C_CRI1         1       165.00003          0.07018
+                   2      2186.00000          0.92982
+    C_CRI2         1        82.50002          0.03509
+                   2        80.00000          0.03403
+                   3      2188.50000          0.93088
+    C_CRI3         1        81.25001          0.03456
+                   2        59.23291          0.02519
+                   3      2210.51709          0.94025
+    C_CRI4         1        70.24146          0.02988
+                   2        44.23195          0.01881
+                   3      2236.52661          0.95131
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         1.000
+
+
+LATENT CLASS INDICATOR MEANS AND PROBABILITIES FOR EACH LATENT CLASS
+
+     MEAN/PROBABILITY PROFILES FOR C_CRI1
+                   Latent class
+                     1      2
+     CRIME1
+       Category 1  0.000  1.000
+       Category 2  1.000  0.000
+
+     MEAN/PROBABILITY PROFILES FOR C_CRI2
+                       Latent class
+                     1      2      3
+     CRIME2
+       Category 1  1.000  0.000  0.000
+       Category 2  0.000  0.000  1.000
+       Category 3  0.000  1.000  0.000
+
+     MEAN/PROBABILITY PROFILES FOR C_CRI3
+                       Latent class
+                     1      2      3
+     CRIME3
+       Category 1  1.000  0.000  0.000
+       Category 2  0.000  0.000  1.000
+       Category 3  0.000  1.000  0.000
+
+     MEAN/PROBABILITY PROFILES FOR C_CRI4
+                       Latent class
+                     1      2      3
+     CRIME4
+       Category 1  1.000  0.000  0.000
+       Category 2  0.000  0.000  1.000
+       Category 3  0.000  1.000  0.000
+
+
+LATENT TRANSITION PROBABILITIES BASED ON THE ESTIMATED MODEL
+
+  C_CRI1 Classes (Rows) by C_CRI2 Classes (Columns)
+
+            1        2        3
+
+   1     0.500    0.000    0.500
+   2     0.000    0.037    0.963
+
+  C_CRI2 Classes (Rows) by C_CRI3 Classes (Columns)
+
+            1        2        3
+
+   1     0.500    0.000    0.500
+   2     0.500    0.000    0.500
+   3     0.000    0.027    0.973
+
+  C_CRI3 Classes (Rows) by C_CRI4 Classes (Columns)
+
+            1        2        3
+
+   1     0.500    0.000    0.500
+   2     0.500    0.000    0.500
+   3     0.000    0.020    0.980
+
+
+C-SPECIFIC CLASSIFICATION RESULTS
+
+Classification Quality for C_CRI1
+
+     Entropy                         1.000
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2
+
+    1   1.000    0.000
+    2   0.000    1.000
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2
+
+    1   1.000    0.000
+    2   0.000    1.000
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2
+
+    1     13.816    0.000
+    2    -13.816    0.000
+
+Classification Quality for C_CRI2
+
+     Entropy                         1.000
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3
+
+    1     13.816    0.000    0.000
+    2      0.000   13.816    0.000
+    3    -13.816  -13.816    0.000
+
+Classification Quality for C_CRI3
+
+     Entropy                         1.000
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3
+
+    1     13.816    0.000    0.000
+    2      0.000   13.816    0.000
+    3    -13.816  -13.816    0.000
+
+Classification Quality for C_CRI4
+
+     Entropy                         1.000
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3
+
+    1   1.000    0.000    0.000
+    2   0.000    1.000    0.000
+    3   0.000    0.000    1.000
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3
+
+    1     13.816    0.000    0.000
+    2      0.000   13.816    0.000
+    3    -13.816  -13.816    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Parameters for Class-specific Model Parts of C_CRI1
+
+Latent Class C_CRI1#1
+
+ Thresholds
+    CRIME1$1         -15.000      0.000    999.000    999.000
+
+Latent Class C_CRI1#2
+
+ Thresholds
+    CRIME1$1          15.000      0.000    999.000    999.000
+
+Parameters for Class-specific Model Parts of C_CRI2
+
+Latent Class C_CRI2#1
+
+ Thresholds
+    CRIME2$1          15.000      0.000    999.000    999.000
+    CRIME2$2          30.000      0.000    999.000    999.000
+
+Latent Class C_CRI2#2
+
+ Thresholds
+    CRIME2$1         -30.000      0.000    999.000    999.000
+    CRIME2$2         -20.000      0.000    999.000    999.000
+
+Latent Class C_CRI2#3
+
+ Thresholds
+    CRIME2$1         -30.000      0.000    999.000    999.000
+    CRIME2$2          30.000      0.000    999.000    999.000
+
+Parameters for Class-specific Model Parts of C_CRI3
+
+Latent Class C_CRI3#1
+
+ Thresholds
+    CRIME3$1          15.000      0.000    999.000    999.000
+    CRIME3$2          30.000      0.000    999.000    999.000
+
+Latent Class C_CRI3#2
+
+ Thresholds
+    CRIME3$1         -30.000      0.000    999.000    999.000
+    CRIME3$2         -20.000      0.000    999.000    999.000
+
+Latent Class C_CRI3#3
+
+ Thresholds
+    CRIME3$1         -30.000      0.000    999.000    999.000
+    CRIME3$2          30.000      0.000    999.000    999.000
+
+Parameters for Class-specific Model Parts of C_CRI4
+
+Latent Class C_CRI4#1
+
+ Thresholds
+    CRIME4$1          15.000      0.000    999.000    999.000
+    CRIME4$2          30.000      0.000    999.000    999.000
+
+Latent Class C_CRI4#2
+
+ Thresholds
+    CRIME4$1         -30.000      0.000    999.000    999.000
+    CRIME4$2         -20.000      0.000    999.000    999.000
+
+Latent Class C_CRI4#3
+
+ Thresholds
+    CRIME4$1         -30.000      0.000    999.000    999.000
+    CRIME4$2          30.000      0.000    999.000    999.000
+
+Categorical Latent Variables
+
+ C_CRI2#1 ON
+    C_CRI1#1          30.000      0.000    999.000    999.000
+
+ C_CRI2#2 ON
+    C_CRI1#1         -30.000      0.000    999.000    999.000
+
+ C_CRI3#1 ON
+    C_CRI2#1          30.000      0.000    999.000    999.000
+    C_CRI2#2          30.000      0.000    999.000    999.000
+
+ C_CRI3#2 ON
+    C_CRI2#1         -30.000      0.000    999.000    999.000
+    C_CRI2#2         -30.000      0.000    999.000    999.000
+
+ C_CRI4#1 ON
+    C_CRI3#1          30.000      0.000    999.000    999.000
+    C_CRI3#2          30.000      0.000    999.000    999.000
+
+ C_CRI4#2 ON
+    C_CRI3#1         -30.000      0.000    999.000    999.000
+    C_CRI3#2         -30.000      0.000    999.000    999.000
+
+ Means
+    C_CRI1#1          -2.584      0.081    -32.005      0.000
+    C_CRI2#1         -30.000      0.000    999.000    999.000
+    C_CRI2#2          -3.271      0.114    -28.713      0.000
+    C_CRI3#1         -30.000      0.000    999.000    999.000
+    C_CRI3#2          -3.582      0.134    -26.681      0.000
+    C_CRI4#1         -30.000      0.000    999.000    999.000
+    C_CRI4#2          -3.891      0.158    -24.696      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.262E+00
+       (ratio of smallest to largest eigenvalue)
+
+
+RESULTS IN PROBABILITY SCALE
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Results for Class-specific Model Parts of C_CRI1
+
+Latent Class C_CRI1#1
+
+ CRIME1
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         1.000      0.000      0.000      1.000
+
+Latent Class C_CRI1#2
+
+ CRIME1
+    Category 1         1.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+
+Results for Class-specific Model Parts of C_CRI2
+
+Latent Class C_CRI2#1
+
+ CRIME2
+    Category 1         1.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Latent Class C_CRI2#2
+
+ CRIME2
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         1.000      0.000      0.000      1.000
+
+Latent Class C_CRI2#3
+
+ CRIME2
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         1.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Results for Class-specific Model Parts of C_CRI3
+
+Latent Class C_CRI3#1
+
+ CRIME3
+    Category 1         1.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Latent Class C_CRI3#2
+
+ CRIME3
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         1.000      0.000      0.000      1.000
+
+Latent Class C_CRI3#3
+
+ CRIME3
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         1.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Results for Class-specific Model Parts of C_CRI4
+
+Latent Class C_CRI4#1
+
+ CRIME4
+    Category 1         1.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+Latent Class C_CRI4#2
+
+ CRIME4
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         0.000      0.000      0.000      1.000
+    Category 3         1.000      0.000      0.000      1.000
+
+Latent Class C_CRI4#3
+
+ CRIME4
+    Category 1         0.000      0.000      0.000      1.000
+    Category 2         1.000      0.000      0.000      1.000
+    Category 3         0.000      0.000      0.000      1.000
+
+
+DIAGRAM INFORMATION
+
+  Mplus diagrams are currently not available for Mixture analysis.
+  No diagram output was produced.
+
+
+     Beginning Time:  16:06:49
+        Ending Time:  16:06:50
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2021 Muthen & Muthen
